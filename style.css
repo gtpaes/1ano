@@ -1,0 +1,1176 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --black: #050202;
+  --deep: #0c0507;
+  --rose: #f4a7b9;
+  --rose-dark: #c97b8a;
+  --rose-glow: rgba(244, 167, 185, 0.3);
+  --orange: #ff7a35;
+  --orange-light: #ffaa70;
+  --orange-glow: rgba(255, 122, 53, 0.25);
+  --white: #fdf5f0;
+  --white-dim: rgba(253, 245, 240, 0.6);
+  --glass: rgba(255, 255, 255, 0.035);
+  --glass-border: rgba(255, 255, 255, 0.07);
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Cursor ─────────────────────────────────────── */
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+#cursor .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rose);
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+#cursor .ring {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 122, 53, 0.45);
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Romantic background ─────────────────────────── */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Loading ─────────────────────────────────────── */
+#loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: #050202;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.8rem;
+}
+#loading-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  letter-spacing: 0.45em;
+  color: var(--rose);
+  opacity: 0;
+  animation: ftx 1.4s ease 1s forwards;
+}
+@keyframes ftx {
+  to {
+    opacity: 1;
+  }
+}
+#loading-bar {
+  width: 140px;
+  height: 1px;
+  background: rgba(255, 122, 53, 0.12);
+  overflow: hidden;
+}
+#loading-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--rose-dark), var(--orange));
+  transition: width 0.04s linear;
+}
+
+/* ── Cinematic Intro ─────────────────────────────── */
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 8500;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+#intro.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Cinematic black bars */
+#intro::before,
+#intro::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 13vh;
+  background: #000;
+  transition: height 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+}
+#intro::before {
+  top: 0;
+}
+#intro::after {
+  bottom: 0;
+}
+#intro.bars-open::before,
+#intro.bars-open::after {
+  height: 0vh;
+}
+
+/* Video bg */
+#intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 1;
+}
+
+/* Video controls overlay */
+#video-controls {
+  position: absolute;
+  bottom: 10vh;
+  right: 2.5rem;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: all;
+  cursor: default;
+}
+#intro:hover #video-controls,
+#intro.show-controls #video-controls {
+  opacity: 1;
+}
+#video-controls button {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 122, 53, 0.3);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+#video-controls button:hover {
+  background: rgba(255, 122, 53, 0.35);
+}
+#volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#volume-slider {
+  appearance: none;
+  width: 80px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 122, 53, 0.3);
+  outline: none;
+  cursor: pointer;
+}
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--orange);
+  cursor: pointer;
+}
+#intro-video.visible {
+  opacity: 1;
+}
+
+/* Intro gradient overlays */
+.intro-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      rgba(0, 0, 0, 0.65) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.7) 0%,
+      transparent 35%,
+      transparent 65%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+}
+
+/* Intro text overlay */
+.intro-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  pointer-events: none;
+}
+.intro-eyebrow {
+  font-size: clamp(0.55rem, 1.3vw, 0.65rem);
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  color: rgba(255, 170, 112, 0.7);
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+  margin-bottom: 1.4rem;
+}
+.intro-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: 0.05em;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 1.2s ease 0.2s,
+    transform 1.2s ease 0.2s;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.6);
+}
+.intro-title em {
+  color: var(--rose);
+  font-style: normal;
+}
+.intro-date {
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 1s ease 1s,
+    transform 1s ease 0.4s;
+  margin-top: 1.5rem;
+}
+.intro-overlay.reveal-text .intro-eyebrow,
+.intro-overlay.reveal-text .intro-title,
+.intro-overlay.reveal-text .intro-date {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Scroll prompt on intro */
+.intro-scroll {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 1s ease 1s;
+  pointer-events: none;
+}
+.intro-scroll.show {
+  opacity: 0.5;
+}
+.intro-scroll span {
+  font-size: 0.55rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.intro-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--orange), transparent);
+  animation: sb 2.2s ease-in-out infinite;
+}
+
+/* Fake video — animated gradient (until you add a real video file) */
+
+/* ── Infinity Scroll Mask Transition ─────────────── */
+#infinity-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#infinity-mask.active {
+  opacity: 1;
+}
+#infinity-mask canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Hero ─────────────────────────────────────────── */
+#hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 1.1s ease,
+    transform 1.1s ease;
+}
+#hero.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-eyebrow {
+  font-size: clamp(0.58rem, 1.4vw, 0.68rem);
+  letter-spacing: 0.55em;
+  color: var(--orange);
+  text-transform: uppercase;
+  margin-bottom: 2.2rem;
+  opacity: 0.75;
+}
+.hero-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(3.2rem, 11vw, 7.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.9rem;
+}
+.hero-title .inf {
+  color: var(--rose);
+  display: inline-block;
+  animation: pInf 3.2s ease-in-out infinite;
+  cursor: pointer;
+}
+@keyframes pInf {
+  0%,
+  100% {
+    text-shadow: 0 0 18px var(--rose-glow);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 38px var(--rose-glow),
+      0 0 70px rgba(244, 167, 185, 0.12);
+    transform: scale(1.05);
+  }
+}
+.hero-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(0.95rem, 2.3vw, 1.3rem);
+  font-style: italic;
+  color: var(--white-dim);
+  margin-bottom: 3rem;
+  letter-spacing: 0.08em;
+}
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 2.5rem;
+  border: 1px solid rgba(255, 122, 53, 0.3);
+  background: transparent;
+  color: var(--orange);
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 100px;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+.btn-start:hover {
+  border-color: var(--orange);
+  box-shadow: 0 0 28px rgba(255, 122, 53, 0.18);
+  transform: translateY(-2px);
+}
+.hero-date {
+  margin-top: 2.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.45em;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.35;
+  animation: sb 2.5s ease-in-out infinite;
+}
+.scroll-hint span {
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, var(--orange), transparent);
+}
+@keyframes sb {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(7px);
+  }
+}
+
+/* ── Section base ────────────────────────────────── */
+section {
+  position: relative;
+  z-index: 1;
+  padding: clamp(4rem, 9vw, 7rem) clamp(1.5rem, 7vw, 7rem);
+}
+.section-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: var(--orange);
+  opacity: 0.75;
+  margin-bottom: 1rem;
+  display: block;
+}
+.section-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(2rem, 5.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+.divider {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--orange), transparent);
+  margin: 1.5rem 0;
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Section 1 — História ────────────────────────── */
+#historia {
+  background: linear-gradient(180deg, var(--black) 0%, var(--deep) 100%);
+  text-align: center;
+}
+#historia .typed-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.2rem, 3vw, 1.9rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--white-dim);
+  max-width: 640px;
+  margin: 0 auto 3.5rem;
+  min-height: 3.8em;
+}
+.typed-cursor {
+  color: var(--rose);
+  animation: blink 0.7s ease infinite;
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.polaroid-grid {
+  display: flex;
+  gap: clamp(1.2rem, 3.5vw, 2.5rem);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+.polaroid {
+  background: #fdf8f5;
+  padding: 10px 10px 42px;
+  box-shadow:
+    0 12px 45px rgba(0, 0, 0, 0.65),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  width: clamp(160px, 25vw, 220px);
+  transform: rotate(var(--rot));
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s;
+  animation: fp var(--dur) ease-in-out infinite;
+}
+.polaroid:nth-child(1) {
+  --rot: -3deg;
+  --dur: 5.5s;
+}
+.polaroid:nth-child(2) {
+  --rot: 1.5deg;
+  --dur: 6.2s;
+  animation-delay: 0.8s;
+}
+.polaroid:nth-child(3) {
+  --rot: -1deg;
+  --dur: 5.8s;
+  animation-delay: 1.4s;
+}
+@keyframes fp {
+  0%,
+  100% {
+    transform: rotate(var(--rot)) translateY(0);
+  }
+  50% {
+    transform: rotate(var(--rot)) translateY(-9px);
+  }
+}
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.06) translateY(-7px) !important;
+  box-shadow:
+    0 28px 65px rgba(0, 0, 0, 0.75),
+    0 0 35px rgba(255, 122, 53, 0.12);
+  z-index: 10;
+  animation-play-state: paused;
+}
+.polaroid-img {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #2a1015;
+}
+.polaroid-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s;
+}
+.polaroid:hover .polaroid-img img {
+  transform: scale(1.06);
+}
+.polaroid-caption {
+  margin-top: 8px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: #6b5c55;
+  text-align: center;
+}
+
+/* ── Section 2 — Timeline ────────────────────────── */
+#timeline-section {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.timeline {
+  position: relative;
+  padding: 1.5rem 0;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--orange),
+    var(--rose-dark),
+    var(--orange),
+    transparent
+  );
+  transform: translateX(-50%);
+}
+@media (max-width: 640px) {
+  .timeline::before {
+    left: 18px;
+  }
+}
+.timeline-item {
+  display: flex;
+  gap: 1.8rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.timeline-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+@media (max-width: 640px) {
+  .timeline-item,
+  .timeline-item:nth-child(even) {
+    flex-direction: column;
+    padding-left: 48px;
+  }
+}
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 1.4rem;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2px solid var(--rose-dark);
+  box-shadow: 0 0 18px var(--orange-glow);
+  z-index: 2;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+.timeline-item:hover .timeline-dot {
+  transform: translateX(-50%) scale(1.55);
+  box-shadow: 0 0 28px var(--orange-glow);
+}
+@media (max-width: 640px) {
+  .timeline-dot {
+    left: 18px;
+  }
+  .timeline-item:hover .timeline-dot {
+    transform: translateX(-50%) scale(1.5);
+  }
+}
+.timeline-content {
+  width: calc(50% - 1.8rem);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 1.3rem;
+  backdrop-filter: blur(10px);
+  transition:
+    background 0.3s,
+    border-color 0.3s,
+    transform 0.3s;
+}
+.timeline-content:hover {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 122, 53, 0.2);
+  transform: translateY(-3px);
+}
+@media (max-width: 640px) {
+  .timeline-content {
+    width: 100%;
+  }
+}
+.timeline-item:nth-child(even) .timeline-content {
+  text-align: right;
+}
+@media (max-width: 640px) {
+  .timeline-item:nth-child(even) .timeline-content {
+    text-align: left;
+  }
+}
+.tl-date {
+  font-size: 0.58rem;
+  letter-spacing: 0.4em;
+  color: var(--orange);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  opacity: 0.85;
+}
+.tl-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.2rem;
+  margin-bottom: 0.35rem;
+}
+.tl-desc {
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  line-height: 1.75;
+}
+.tl-emoji {
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.tl-photo {
+  width: 100%;
+  height: 200px;
+  margin-top: 0.9rem;
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+}
+.tl-photo.empty {
+  display: none;
+}
+.tl-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+/* ── Section 3 — Galeria ────────────────────────── */
+#galeria {
+  background: var(--deep);
+}
+.gallery-grid {
+  columns: 3 200px;
+  gap: 0.85rem;
+  margin-top: 2.5rem;
+}
+@media (max-width: 480px) {
+  .gallery-grid {
+    columns: 2 130px;
+  }
+}
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 0.85rem;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  display: none;
+}
+.gallery-item.has-img {
+  display: block;
+}
+.gallery-item img {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.04);
+}
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 1, 1, 0.75) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.85rem;
+}
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+.gal-caption {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--white);
+}
+
+/* Modal */
+#modal {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  background: rgba(0, 0, 0, 0.93);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(8px);
+}
+#modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+#modal img {
+  max-width: 90vw;
+  max-height: 85dvh;
+  border-radius: 8px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  transform: scale(0.95);
+  transition: transform 0.3s;
+}
+#modal.open img {
+  transform: scale(1);
+}
+#modal-close {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#modal-caption {
+  position: absolute;
+  bottom: 1.8rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+}
+
+/* ── Section 4 — Carta ──────────────────────────── */
+#carta {
+  background: linear-gradient(180deg, var(--deep) 0%, var(--black) 100%);
+  display: flex;
+  justify-content: center;
+}
+.letter-wrapper {
+  max-width: 640px;
+  width: 100%;
+}
+.letter-card {
+  background: linear-gradient(145deg, #100609, #160a0d);
+  border: 1px solid rgba(255, 122, 53, 0.13);
+  border-radius: 18px;
+  padding: clamp(1.8rem, 5vw, 3.5rem);
+  position: relative;
+  box-shadow:
+    0 35px 75px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 122, 53, 0.07);
+}
+.letter-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: radial-gradient(
+    ellipse at top right,
+    rgba(255, 122, 53, 0.04) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+.letter-seal {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 18px rgba(255, 122, 53, 0.4);
+}
+.letter-header {
+  font-size: 0.58rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255, 122, 53, 0.45);
+  margin-bottom: 1.8rem;
+  text-align: right;
+}
+.letter-salutation {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--rose);
+  margin-bottom: 1.4rem;
+}
+.letter-body {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 300;
+  line-height: 2.1;
+  color: var(--white-dim);
+}
+.letter-signature {
+  margin-top: 2.2rem;
+  text-align: right;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--orange);
+}
+
+/* ── Section 5 — Contador ───────────────────────── */
+#contador {
+  text-align: center;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+#contador::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(255, 122, 53, 0.04) 0%,
+    transparent 65%
+  );
+}
+.counter-grid {
+  display: flex;
+  gap: clamp(1.2rem, 4.5vw, 3.5rem);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2.5rem 0;
+}
+.counter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+.counter-number {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(3rem, 9vw, 6rem);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+  text-shadow: 0 0 50px rgba(255, 122, 53, 0.25);
+}
+.counter-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--orange);
+  opacity: 0.75;
+}
+.counter-sep {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.8rem, 5.5vw, 3.5rem);
+  color: rgba(255, 122, 53, 0.2);
+  align-self: center;
+  line-height: 1;
+}
+.counter-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(0.9rem, 2.2vw, 1.25rem);
+  font-style: italic;
+  color: var(--white-dim);
+  margin-top: 0.8rem;
+}
+
+/* ── Section 6 — Infinito ───────────────────────── */
+#infinito {
+  min-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #0e0408 0%, var(--black) 70%);
+  padding: 3.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+#infinity-canvas {
+  display: block;
+  max-width: 100%;
+}
+.infinity-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.6rem, 4.5vw, 3rem);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-top: 1.8rem;
+}
+.infinity-text .rose {
+  color: var(--rose);
+}
+.infinity-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  font-style: italic;
+  color: var(--white-dim);
+  margin-top: 0.65rem;
+  letter-spacing: 0.2em;
+}
+
+/* ── Easter egg ─────────────────────────────────── */
+#easter-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+#easter-popup.show {
+  opacity: 1;
+}
+.easter-msg {
+  background: linear-gradient(
+    135deg,
+    rgba(10, 4, 6, 0.96),
+    rgba(18, 8, 12, 0.96)
+  );
+  border: 1px solid rgba(244, 167, 185, 0.3);
+  border-radius: 18px;
+  padding: 2.2rem 3rem;
+  text-align: center;
+  box-shadow:
+    0 28px 55px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(244, 167, 185, 0.08);
+  backdrop-filter: blur(18px);
+}
+.easter-msg p {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+  font-style: italic;
+  color: var(--rose);
+  line-height: 1.55;
+}
+.easter-heart {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.85rem;
+  animation: hb 0.65s ease infinite;
+}
+@keyframes hb {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+.float-heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9400;
+  font-size: 1.1rem;
+  animation: fu 2.4s ease forwards;
+  user-select: none;
+}
+@keyframes fu {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-190px) scale(0.25);
+    opacity: 0;
+  }
+}
+
+/* ── Footer ──────────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+.footer-infinity {
+  font-size: 2.2rem;
+  color: var(--rose);
+  display: block;
+  margin-bottom: 0.8rem;
+  animation: pInf 3.2s ease-in-out infinite;
+}
+.footer-names {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1rem;
+  color: var(--white-dim);
+  letter-spacing: 0.15em;
+}
+.footer-date {
+  font-size: 0.58rem;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.18);
+  margin-top: 0.4rem;
+  text-transform: uppercase;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 122, 53, 0.25);
+  border-radius: 2px;
+}
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+  #cursor {
+    display: none;
+  }
+}

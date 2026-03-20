@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gustavo ♾️ Helena — 1 Ano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+
+<div id="cursor"><div class="dot"></div><div class="ring"></div></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- ── Loading ──────────────────────────────────── -->
+<div id="loading">
+  <canvas id="loading-canvas" width="200" height="200"></canvas>
+  <div id="loading-text">carregando nossa história...</div>
+  <div id="loading-bar"><div id="loading-fill"></div></div>
+</div>
+
+<!-- ── Infinity scroll mask ─────────────────────── -->
+<div id="infinity-mask"><canvas id="mask-canvas"></canvas></div>
+
+<!-- ══════════════════════════════
+     CINEMATIC INTRO (GTA-style)
+══════════════════════════════ -->
+<div id="intro">
+  <!-- Replace the src below with your actual video file path, e.g. src="video/nossa-historia.mp4" -->
+  <video id="intro-video" autoplay muted loop playsinline src="assets/video/IMG_4933 1.MOV"></video>
+
+  <!-- Controles do vídeo -->
+  <div id="video-controls">
+    <button id="btn-playpause" onclick="togglePlay()">⏸</button>
+    <div id="volume-wrap">
+      <button id="btn-mute" onclick="toggleMute()">🔇</button>
+      <input id="volume-slider" type="range" min="0" max="1" step="0.05" value="0" oninput="setVolume(this.value)">
+    </div>
+  </div>
+
+  <!-- Animated gradient background (shows when no video) -->
+  
+
+  <!-- Cinematic grain -->
+  <canvas id="grain-canvas" style="position:absolute;inset:0;z-index:2;opacity:.04;pointer-events:none;"></canvas>
+
+  <!-- Vignette -->
+  <div class="intro-vignette"></div>
+
+  <!-- Text overlay -->
+  <div class="intro-overlay" id="intro-overlay">
+    <span class="intro-eyebrow">20 · 03 · 2025</span>
+    <h1 class="intro-title">Gustavo<br>&amp; <em>Helena</em></h1>
+    <span class="intro-date">Um ano de amor</span>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="intro-scroll" id="intro-scroll">
+    <span>scroll</span>
+    <div class="intro-scroll-line"></div>
+  </div>
+</div>
+
+<!-- ── Easter egg popup ─────────────────────────── -->
+<div id="easter-popup">
+  <div class="easter-msg">
+    <span class="easter-heart">💗</span>
+    <p>Eu te amo mais do que<br>palavras conseguem dizer.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section id="hero">
+  <span class="hero-eyebrow">20 de Março de 2026 — 1 Ano</span>
+  <h1 class="hero-title">Gustavo <span class="inf" id="hero-inf">♾️</span> Helena</h1>
+  <p class="hero-sub">Uma pequena história sobre nós...</p>
+  <button class="btn-start" onclick="document.getElementById('historia').scrollIntoView({behavior:'smooth'})">✦ Começar nossa história</button>
+  <p class="hero-date">Desde 20 · 03 · 2025</p>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- ══════════════════════════════
+     SEÇÃO 1 — NOSSA HISTÓRIA
+══════════════════════════════ -->
+<section id="historia">
+  <div style="text-align:center; max-width:860px; margin:0 auto;">
+    <span class="section-label reveal">01 — Nossa História</span>
+    <div class="typed-text reveal">
+      <span id="typed-output"></span><span class="typed-cursor">|</span>
+    </div>
+    <div class="divider reveal" style="margin:0 auto;"></div>
+
+    <!-- ═══════════════════════════════════════════
+         POLAROIDS — troque o src="" pela sua foto
+         Exemplo: src="fotos/nossa-foto.jpg"
+         Troque também as legendas no .polaroid-caption
+    ═══════════════════════════════════════════ -->
+    <div class="polaroid-grid">
+
+      <div class="polaroid reveal">
+        <div class="polaroid-img">
+          <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.03.jpeg" alt="Foto 1">
+          
+        </div>
+        <div class="polaroid-caption">O começo de tudo ♥</div>
+      </div>
+
+      <div class="polaroid reveal">
+        <div class="polaroid-img">
+          <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.02.jpeg" alt="Foto 2">
+        </div>
+        <div class="polaroid-caption">Momentos que ficam ∞</div>
+      </div>
+
+      <div class="polaroid reveal">
+        <div class="polaroid-img">
+          <img src="assets/img/WhatsApp Image 2026-03-10 at 20.28.41 (3).jpeg" alt="Foto 3">
+        </div>
+        <div class="polaroid-caption">Sorrisos que guardarei</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SEÇÃO 2 — TIMELINE
+══════════════════════════════ -->
+<section id="timeline-section">
+  <span class="section-label reveal" style="text-align:center;display:block;">02 — Momentos Especiais</span>
+  <h2 class="section-title reveal" style="text-align:center;">Nossa linha do tempo</h2>
+  <div class="divider reveal" style="margin:0 auto;"></div>
+
+       
+  <div class="timeline" style="margin-top:3.5rem;">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        
+        <span class="tl-date">20 de março de 2025</span>
+        <h3 class="tl-title">O início de tudo</h3>
+        <p class="tl-desc">O dia em que duas vidas decidiram caminhar juntas. Um "sim" que mudou tudo.</p>
+        <div class="tl-photo"><img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.03 (1).jpeg" alt=""></div>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        
+        <span class="tl-date">Primeiros registros</span>
+        <h3 class="tl-title">Uma das primeiras fotos juntos</h3>
+        <p class="tl-desc"> Um instante que carregaremos para sempre.</p>
+        <div class="tl-photo"><img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.02 (1).jpeg" alt=""></div>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        
+        <span class="tl-date">Uma aventura</span>
+        <h3 class="tl-title">Nossa primeira viagem</h3>
+        <p class="tl-desc">O mundo ficou mais bonito quando passamos a explorá-lo juntos.</p>
+        <div class="tl-photo"><img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.03 (5).jpeg" alt=""></div>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        
+        <span class="tl-date">Entre risadas</span>
+        <h3 class="tl-title">Momentos engraçados</h3>
+        <p class="tl-desc">As risadas que só nós dois entendemos kakakakka. Meu lugar favorito é ao seu lado nenem.</p>
+        <div class="tl-photo"><img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.02 (4).jpeg" alt=""></div>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        
+        <span class="tl-date">20 de março de 2026</span>
+        <h3 class="tl-title">Nosso primeiro aniversário</h3>
+        <p class="tl-desc">Um ano de cumplicidade, amor e infinitas razões para sorrir. Que venham muitos mais.</p>
+        <div class="tl-photo"><img src="" alt=""></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SEÇÃO 3 — GALERIA
+══════════════════════════════ -->
+<section id="galeria">
+  <span class="section-label reveal">03 — Galeria de Memórias</span>
+  <h2 class="section-title reveal">Nossas memórias</h2>
+  <div class="divider reveal"></div>
+
+
+  <div class="gallery-grid reveal" id="gallery-grid">
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Nosso sorriso favorito')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.28.41 (4).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Nosso beijo favorito</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Um dia especial')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.03 (3).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Um dia especial</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Felicidade em dobro')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.03 (4).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Felicidade em dobro</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'O mundo em dois')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.03 (2).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">O nosso mundo</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Nossa luz')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.02 (2).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Eu te amo</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Memória guardada')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.28.41 (1).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Memória guardada</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Momento único')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.28.41 (2).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Momento único</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openModal(this.querySelector('img').src,'Sempre juntos')">
+      <img src="assets/img/WhatsApp Image 2026-03-10 at 20.26.02 (3).jpeg" alt="">
+      <div class="gallery-overlay"><span class="gal-caption">Sempre juntos</span></div>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- Modal -->
+<div id="modal" onclick="closeModal()">
+  <button id="modal-close" onclick="event.stopPropagation();closeModal()">✕</button>
+  <img id="modal-img" src="" alt="">
+  <div id="modal-caption"></div>
+</div>
+
+<!-- ══════════════════════════════
+     SEÇÃO 4 — CARTA
+══════════════════════════════ -->
+<section id="carta">
+  <div class="letter-wrapper">
+    <span class="section-label reveal" style="text-align:center;display:block;">04 — Uma Mensagem Para Você</span>
+    <h2 class="section-title reveal" style="text-align:center;">Carta de amor</h2>
+    <div class="divider reveal" style="margin:0 auto;"></div>
+    <div style="margin-top:2.5rem;" class="reveal">
+      <div class="letter-card">
+        <div class="letter-seal">♾</div>
+        <div class="letter-header">20 de Março de 2026 · Gustavo para Helena</div>
+        <div class="letter-salutation">Minha Neném,</div>
+
+        <!-- ═══════════════════════════════════════════
+             CARTA 
+        ═══════════════════════════════════════════ -->
+        <div class="letter-body" id="letter-body">
+          Hoje é um dia muito especial para nossas vidas, completamos um aninho juntos, você com toda certeza foi minha melhor escolha<br><br>
+          
+          Esse site foi apenas uma lembrancinha, quero te agradecer por todo esse tempo juntos. Parece que foi ontem que eu pedi você em namoro, como parece também que eu te conheço de outras vidas, nossas almas se encaixaram de uma forma tão linda, um amor tão puro e genuíno, você é uma mulher pura, delicada, inteligente, linda , gostosa demais , cheia de amor, carinho , bondade e muitas outras coisas, como está na música do bk no insta "Tenho poucas certezas na vida e você é uma delas, sei algumas palavras bonitas tu resume todas elas". Helena eu quero casar com você, realizar meu sonho de ser pai de dois filhos seu, um menino e uma menina, mas principalmente, que a gente sempre esteja junto até o pós vida, Eu te amo infinito²⁰
+
+        </div>
+
+        <div class="letter-signature">Com todo o meu amor, Gustavo ♾️.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SEÇÃO 5 — CONTADOR
+══════════════════════════════ -->
+<section id="contador">
+  <span class="section-label reveal" style="display:block;text-align:center;">05 — Nosso Tempo</span>
+  <h2 class="section-title reveal" style="text-align:center;">Cada segundo com você<br>valeu a pena.</h2>
+  <div class="counter-grid reveal">
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-days">000</span>
+      <span class="counter-label">dias</span>
+    </div>
+    <span class="counter-sep">:</span>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-hours">00</span>
+      <span class="counter-label">horas</span>
+    </div>
+    <span class="counter-sep">:</span>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-minutes">00</span>
+      <span class="counter-label">minutos</span>
+    </div>
+    <span class="counter-sep">:</span>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-seconds">00</span>
+      <span class="counter-label">segundos</span>
+    </div>
+  </div>
+  <p class="counter-sub reveal">desde 20 de março de 2025</p>
+</section>
+
+<!-- ══════════════════════════════
+     SEÇÃO 6 — INFINITO
+══════════════════════════════ -->
+<section id="infinito">
+  <span class="section-label reveal">06 — Nosso Infinito</span>
+  <canvas id="infinity-canvas" width="480" height="200"></canvas>
+  <div class="infinity-text reveal">Gustavo <span class="rose">♾️</span> Helena</div>
+  <p class="infinity-sub reveal">Para sempre.</p>
+</section>
+
+<footer class="reveal">
+  <span class="footer-infinity">♾️</span>
+  <p class="footer-names">Gustavo & Helena</p>
+  <p class="footer-date">20 · 03 · 2025 — até o infinito²⁰</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
